@@ -2,6 +2,7 @@
   <div>
     <input type="text" v-model="email"/>
     <button @click="sendData">SEND</button>
+    <h1>{{value}}</h1>
   </div>
 </template>
 
@@ -12,16 +13,19 @@ export default {
   data() {
     return {
       email: '',
-      errors: []
+      errors: [],
+      value: ''
     }
   },
 
   // Gửi request lên server khi mà postPost() được gọi
   methods: {
     sendData(){
-      axios.post(`http://192.168.1.11:5002/test`, {email: this.email})
+      let data = new FormData();
+      data.append('email',this.email)
+      axios.post(`http://192.168.1.11:5001/test`,data)
       .then(response => {
-        console.log(response);
+        this.value = response.data['data'];
       })
       .catch(e => {
         this.errors.push(e)
